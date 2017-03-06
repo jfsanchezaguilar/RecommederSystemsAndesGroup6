@@ -27,15 +27,39 @@ export class HomeComponent implements OnInit {
   public newUserObj: BookUser = new BookUser();
   public newBookObj: Book = new Book();
   public newBookRaitingObj: BookRaiting = new BookRaiting();
+  public recommendTasksResult: string = "";
+  public isResultNotAvailabel: boolean = false;
 
   ngOnInit(): void {
-    this.recommendTaskService.getAll().subscribe(response => this.recommendTasks = response.results);
-    if (this.recommendTasks.length > 0)
-      this.recommendTaskSelected = this.recommendTasks[0];
+    this.updateRecommendTasks();
   }
 
   constructor(private recommendTaskService: RecommendTaskService, private bookService: BookService, private bookUserService: BookUserService, private bookRaitingService: BookRaitingService) {
 
+  }
+
+  private updateRecommendTasks() {
+    this.recommendTaskService.getAll().subscribe((response) => {
+      console.log(response);
+      this.recommendTasks = response
+      if (this.recommendTasks.length > 0) {
+        this.recommendTaskSelected = this.recommendTasks[0];
+        this.updateRecommendTaskResult();
+      }
+    });
+  }
+
+  private updateRecommendTaskResult() {
+    this.recommendTasksResult = "";
+    this.isResultNotAvailabel = false;
+    this.recommendTaskService.get(this.recommendTaskSelected.id).subscribe((response) => {
+      this.recommendTasksResult = response;
+      if (response == "") {
+        this.isResultNotAvailabel = true;
+      }
+    }, (error: any) => {
+      this.isResultNotAvailabel = true;
+    });
   }
 
   onAlgorithmSelected(value: string) {
@@ -52,6 +76,7 @@ export class HomeComponent implements OnInit {
 
   onRecommendTaskSelected(value: RecommendTask) {
     this.recommendTaskSelected = value;
+    this.updateRecommendTaskResult();
   }
 
   newRecommendTask() {
@@ -63,6 +88,7 @@ export class HomeComponent implements OnInit {
     task.added_date = moment().toDate();
     this.recommendTaskService.save(task).subscribe(() => {
       this.saveSuccess = true;
+      this.updateRecommendTasks();
       setTimeout(() => {
         this.saveSuccess = false;
       }, 2000);

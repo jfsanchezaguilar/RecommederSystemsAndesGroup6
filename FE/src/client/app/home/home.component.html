@@ -62,9 +62,12 @@
                         <li *ngFor="let item of recommendTasks" role="menuitem"><a class="dropdown-item" (click)="onRecommendTaskSelected(item)">{{item.id}} - {{item.training}} - {{item.similarity}} - {{item.algorithm}} - {{item.added_date}}</a></li>
                     </ul>
                 </div>
-                <alert type="error" *ngIf="recommendTaskSelected.status == 0">
+                <alert type="error" *ngIf="isResultNotAvailabel">
                     <strong>Error!</strong> This recommendation has not been proccessed.
                 </alert>
+                <div>
+                    {{recommendTasksResult}}
+                </div>
             </tab>
             <tab heading="Users">
                 <h1> Users </h1>

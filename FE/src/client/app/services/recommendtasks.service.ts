@@ -10,15 +10,16 @@ import { RecommendTask } from "../models/RecommendTask";
 export class RecommendTaskService {
 
     private url: string = 'http://localhost:8000/tasks/';
+    private urldetails: string = 'http://localhost:8000/taskdetails/'
     private headers: Headers;
 
     constructor(private http: Http) {
         this.headers = new Headers();
         this.headers.append("Authorization", "Basic " + btoa("root:root1234"));
+        this.headers.append("Content-Type", "application/json");
     }
 
     save(recommendTask: RecommendTask) {
-        this.headers.append("Content-Type", "application/json");
         let json: string = JSON.stringify(recommendTask);
         console.log(json);
         return this.http.post(this.url, JSON.stringify(recommendTask), { headers: this.headers }).map(this.extractData).catch(this.handleError);
@@ -26,6 +27,10 @@ export class RecommendTaskService {
 
     getAll(): Observable<any> {
         return this.http.get(this.url, { headers: this.headers }).map(this.extractData);
+    }
+
+    get(id: number) {
+        return this.http.get(this.urldetails + id, { headers: this.headers }).map(this.extractData);
     }
 
     private handleError(error: any) {

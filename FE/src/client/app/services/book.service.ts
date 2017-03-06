@@ -15,10 +15,10 @@ export class BookService {
     constructor(private http: Http) {
         this.headers = new Headers();
         this.headers.append("Authorization", "Basic " + btoa("root:root1234"));
+        this.headers.append("Content-Type", "application/json");
     }
 
     save(book: Book) {
-        this.headers.append("Content-Type", "application/json");
         let json: string = JSON.stringify(book);
         console.log(json);
         return this.http.post(this.url, JSON.stringify(book), { headers: this.headers }).map(this.extractData).catch(this.handleError);

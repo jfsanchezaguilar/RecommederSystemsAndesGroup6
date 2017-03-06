@@ -1,41 +1,20 @@
-from django.contrib.auth.models import User, Group
+from rest_framework import generics
 from rest_framework import status
-from rest_framework import viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from RecommendApi.file_reader import read_file
 from RecommendApi.file_updater import update_book_user_file, update_book_file, update_book_raiting_file
 from RecommendApi.models import RecommendTask, BookUser, Book, BookRaiting
-from RecommendApi.serializers import UserSerializer, GroupSerializer, RecommendTaskSerializer, BookUserSerializer, \
+from RecommendApi.serializers import RecommendTaskSerializer, BookUserSerializer, \
     BookSerializer, BookRaitingSerializer
 
 
-class UserViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-    queryset = User.objects.all().order_by('-date_joined')
-    serializer_class = UserSerializer
-
-
-class GroupViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows groups to be viewed or edited.
-    """
-    queryset = Group.objects.all()
-    serializer_class = GroupSerializer
-
-
-@api_view(['GET'])
-def recommend_task_list_detail(request, pk):
-    try:
-        task = RecommendTask.objects.get(pk=pk)
-    except RecommendTask.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-    if request.method == 'GET':
-        serializer = RecommendTaskSerializer(task)
-        return Response(serializer.data)
+class RecommendTaskDetails(generics.ListAPIView):
+    def get(self, request, uid):
+        task = RecommendTask.objects.get(id=uid)
+        json = read_file(task.algorithm, task.similarity, task.training)
+        return Response(json)
 
 
 @api_view(['GET', 'POST'])
@@ -49,7 +28,7 @@ def recommend_task_list(request):
         if serializer.is_valid():
             task = RecommendTask(**serializer.validated_data)
             if not RecommendTask.objects.filter(training=task.training) \
-                    or not RecommendTask.objects.filter(similarity=task.similarity)\
+                    or not RecommendTask.objects.filter(similarity=task.similarity) \
                     or not RecommendTask.objects.filter(algorithm=task.algorithm):
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
