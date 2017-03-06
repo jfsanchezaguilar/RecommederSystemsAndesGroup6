@@ -42,7 +42,15 @@ var webpackConfig = {
         ]
       },
       { test: /\.css$/, loaders: ['to-string-loader', 'css-loader'] },
-      { test: /\.html$/, loader: 'raw-loader' }
+      { test: /\.html$/, loader: 'raw-loader' },
+      {
+        test: /\.scss$/,
+        loaders: ['raw-loader', 'sass-loader']
+      },
+      {
+        test: /\.(woff2?|ttf|eot|svg)$/,
+        loader: 'url-loader?limit=10000'
+      }
     ]
   }
 
@@ -60,8 +68,8 @@ var defaultConfig = {
   },
 
   resolve: {
-    extensions: [ '.ts', '.js' ],
-    modules: [ path.resolve(__dirname, 'node_modules') ]
+    extensions: ['.ts', '.js'],
+    modules: [path.resolve(__dirname, 'node_modules')]
   },
 
   devServer: {
