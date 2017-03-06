@@ -56,17 +56,52 @@
                 <h1> Recommender Results </h1>
                 <div class="btn-group" dropdown id="ddl_tasks">
                     <button id="recommendTasks" type="button" class="btn btn-danger" dropdownToggle>
-                        {{recommendTaskSelected.id}} - {{recommendTaskSelected.training}} - {{recommendTaskSelected.similarity}} - {{recommendTaskSelected.algorithm}} - {{recommendTaskSelected.added_date}} <span class="caret"></span>
+                         {{recommendTaskSelected.algorithm}} - {{recommendTaskSelected.training}} - {{recommendTaskSelected.similarity}} <span class="caret"></span>
                     </button>
                     <ul dropdownMenu role="menu" aria-labelledby="recommendTasks">
-                        <li *ngFor="let item of recommendTasks" role="menuitem"><a class="dropdown-item" (click)="onRecommendTaskSelected(item)">{{item.id}} - {{item.training}} - {{item.similarity}} - {{item.algorithm}} - {{item.added_date}}</a></li>
+                        <li *ngFor="let item of recommendTasks" role="menuitem"><a class="dropdown-item" (click)="onRecommendTaskSelected(item)">{{item.algorithm}} - {{item.training}} - {{item.similarity}}</a></li>
                     </ul>
                 </div>
                 <alert type="error" *ngIf="isResultNotAvailabel">
                     <strong>Error!</strong> This recommendation has not been proccessed.
                 </alert>
                 <div>
-                    {{recommendTasksResult}}
+                    <br/>
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <div class="btn-group" dropdown id="ddl_algorithms">
+                                <button type="button" class="btn btn-primary" dropdownToggle>
+                                    {{filterBy}} <span class="caret"></span>
+                                </button>
+                                <ul dropdownMenu role="menu" aria-labelledby="single-button">
+                                    <li role="menuitem"><a class="dropdown-item" (click)="onFilterSelected('User')">User</a></li>
+                                    <li role="menuitem"><a class="dropdown-item" (click)="onFilterSelected('Book')">Book</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input [(ngModel)]="filterByTerm" [ngModelOptions]="{standalone: true}" type="text" class="form-control">
+                        </div>
+                        <button (click)="filterItems()">Filter</button>
+                    </form>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>User Id</th>
+                                <th>ISBN</th>
+                                <th>Score</th>
+                                <th>Rank</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of recommendTasksResultFiltered">
+                                <td>{{item.UserID}}</td>
+                                <td>{{item.ISBN}}</td>
+                                <td>{{item.score}}</td>
+                                <td>{{item.rank}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </tab>
             <tab heading="Users">
@@ -74,15 +109,18 @@
                 <form (ngSubmit)="newUser()">
                     <div class="form-group">
                         <label for="userIdInput">User Id</label>
-                        <input [(ngModel)]="newUserObj.user_id" [ngModelOptions]="{standalone: true}" type="number" class="form-control" id="userIdInput" placeholder="User Id">
+                        <input [(ngModel)]="newUserObj.user_id" [ngModelOptions]="{standalone: true}" type="number" class="form-control" id="userIdInput"
+                            placeholder="User Id">
                     </div>
                     <div class="form-group">
                         <label for="locationInput">Location</label>
-                        <input [(ngModel)]="newUserObj.location" [ngModelOptions]="{standalone: true}" type="text" class="form-control" id="locationInput" placeholder="Location">
+                        <input [(ngModel)]="newUserObj.location" [ngModelOptions]="{standalone: true}" type="text" class="form-control" id="locationInput"
+                            placeholder="Location">
                     </div>
                     <div class="form-group">
                         <label for="ageInput">Age</label>
-                        <input [(ngModel)]="newUserObj.age" [ngModelOptions]="{standalone: true}" type="number" class="form-control" id="ageInput" placeholder="Age">
+                        <input [(ngModel)]="newUserObj.age" [ngModelOptions]="{standalone: true}" type="number" class="form-control" id="ageInput"
+                            placeholder="Age">
                     </div>
                     <button type="submit" class="btn btn-default">Submit</button>
                 </form>
@@ -91,35 +129,43 @@
                 <form (ngSubmit)="newBook()">
                     <div class="form-group">
                         <label for="isbnInput">ISBN</label>
-                        <input [(ngModel)]="newBookObj.isbn" [ngModelOptions]="{standalone: true}" type="text" class="form-control" id="isbnInput" placeholder="ISBN">
+                        <input [(ngModel)]="newBookObj.isbn" [ngModelOptions]="{standalone: true}" type="text" class="form-control" id="isbnInput"
+                            placeholder="ISBN">
                     </div>
                     <div class="form-group">
                         <label for="bookTitleInput">Book Tittle</label>
-                        <input [(ngModel)]="newBookObj.book_title" [ngModelOptions]="{standalone: true}" type="text" class="form-control" id="bookTitleInput" placeholder="Book Title">
+                        <input [(ngModel)]="newBookObj.book_title" [ngModelOptions]="{standalone: true}" type="text" class="form-control" id="bookTitleInput"
+                            placeholder="Book Title">
                     </div>
                     <div class="form-group">
                         <label for="bookAuthorInput">Book Author</label>
-                        <input [(ngModel)]="newBookObj.book_author" [ngModelOptions]="{standalone: true}" type="text" class="form-control" id="bookAuthorInput" placeholder="Book Author">
+                        <input [(ngModel)]="newBookObj.book_author" [ngModelOptions]="{standalone: true}" type="text" class="form-control" id="bookAuthorInput"
+                            placeholder="Book Author">
                     </div>
                     <div class="form-group">
                         <label for="yearPublishInput">Year Publish</label>
-                        <input [(ngModel)]="newBookObj.year_publish" [ngModelOptions]="{standalone: true}" type="text" class="form-control" id="yearPublishInput" placeholder="Year Publish">
+                        <input [(ngModel)]="newBookObj.year_publish" [ngModelOptions]="{standalone: true}" type="text" class="form-control" id="yearPublishInput"
+                            placeholder="Year Publish">
                     </div>
                     <div class="form-group">
                         <label for="publisherInput">Publisher</label>
-                        <input [(ngModel)]="newBookObj.publisher" [ngModelOptions]="{standalone: true}" type="text" class="form-control" id="publisherInput" placeholder="Publisher">
+                        <input [(ngModel)]="newBookObj.publisher" [ngModelOptions]="{standalone: true}" type="text" class="form-control" id="publisherInput"
+                            placeholder="Publisher">
                     </div>
                     <div class="form-group">
                         <label for="imgSmallInput">Image Small</label>
-                        <input [(ngModel)]="newBookObj.image_small" [ngModelOptions]="{standalone: true}" type="text" class="form-control" id="imgSmallInput" placeholder="Image Small">
+                        <input [(ngModel)]="newBookObj.image_small" [ngModelOptions]="{standalone: true}" type="text" class="form-control" id="imgSmallInput"
+                            placeholder="Image Small">
                     </div>
                     <div class="form-group">
                         <label for="imgMediumInput">Image Medium</label>
-                        <input [(ngModel)]="newBookObj.image_medium" [ngModelOptions]="{standalone: true}" type="text" class="form-control" id="imgMediumInput" placeholder="Image Medium">
+                        <input [(ngModel)]="newBookObj.image_medium" [ngModelOptions]="{standalone: true}" type="text" class="form-control" id="imgMediumInput"
+                            placeholder="Image Medium">
                     </div>
                     <div class="form-group">
                         <label for="imgLargeInput">Image Large</label>
-                        <input [(ngModel)]="newBookObj.image_large" [ngModelOptions]="{standalone: true}" type="text" class="form-control" id="imgLargeInput" placeholder="Image Large">
+                        <input [(ngModel)]="newBookObj.image_large" [ngModelOptions]="{standalone: true}" type="text" class="form-control" id="imgLargeInput"
+                            placeholder="Image Large">
                     </div>
                     <button type="submit" class="btn btn-default">Submit</button>
                 </form>
@@ -128,15 +174,18 @@
                 <form (ngSubmit)="newBookRaiting()">
                     <div class="form-group">
                         <label for="userIdRaitingInput">User Id</label>
-                        <input [(ngModel)]="newBookRaitingObj.user_id" [ngModelOptions]="{standalone: true}" type="number" class="form-control" id="userIdRaitingInput" placeholder="User Id">
+                        <input [(ngModel)]="newBookRaitingObj.user_id" [ngModelOptions]="{standalone: true}" type="number" class="form-control" id="userIdRaitingInput"
+                            placeholder="User Id">
                     </div>
                     <div class="form-group">
                         <label for="isbnRaitingInput">ISBN</label>
-                        <input [(ngModel)]="newBookRaitingObj.isbn" [ngModelOptions]="{standalone: true}" type="text" class="form-control" id="isbnRaitingInput" placeholder="ISBN">
+                        <input [(ngModel)]="newBookRaitingObj.isbn" [ngModelOptions]="{standalone: true}" type="text" class="form-control" id="isbnRaitingInput"
+                            placeholder="ISBN">
                     </div>
                     <div class="form-group">
                         <label for="raitingInput">Raiting</label>
-                        <input [(ngModel)]="newBookRaitingObj.raiting" [ngModelOptions]="{standalone: true}" type="number" class="form-control" id="raitingInput" placeholder="Raiting">
+                        <input [(ngModel)]="newBookRaitingObj.raiting" [ngModelOptions]="{standalone: true}" type="number" class="form-control" id="raitingInput"
+                            placeholder="Raiting">
                     </div>
                     <button type="submit" class="btn btn-default">Submit</button>
                 </form>

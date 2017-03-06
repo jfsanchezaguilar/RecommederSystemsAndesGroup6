@@ -27,8 +27,11 @@ export class HomeComponent implements OnInit {
   public newUserObj: BookUser = new BookUser();
   public newBookObj: Book = new Book();
   public newBookRaitingObj: BookRaiting = new BookRaiting();
-  public recommendTasksResult: string = "";
+  public recommendTasksResult: any[] = [];
+  public recommendTasksResultFiltered: any[] = [];
   public isResultNotAvailabel: boolean = false;
+  public filterBy: string = "User";
+  public filterByTerm: string = "";
 
   ngOnInit(): void {
     this.updateRecommendTasks();
@@ -50,10 +53,10 @@ export class HomeComponent implements OnInit {
   }
 
   private updateRecommendTaskResult() {
-    this.recommendTasksResult = "";
     this.isResultNotAvailabel = false;
     this.recommendTaskService.get(this.recommendTaskSelected.id).subscribe((response) => {
-      this.recommendTasksResult = response;
+      this.recommendTasksResult = JSON.parse(response);
+      this.recommendTasksResultFiltered = this.recommendTasksResult;
       if (response == "") {
         this.isResultNotAvailabel = true;
       }
@@ -77,6 +80,21 @@ export class HomeComponent implements OnInit {
   onRecommendTaskSelected(value: RecommendTask) {
     this.recommendTaskSelected = value;
     this.updateRecommendTaskResult();
+  }
+
+  onFilterSelected(value: string) {
+    this.filterBy = value;
+  }
+
+  filterItems() {
+    if (this.filterByTerm != "") {
+      if (this.filterBy == "User")
+        this.recommendTasksResultFiltered = this.recommendTasksResult.filter(result => result.UserID.toString() == this.filterByTerm);
+      else if (this.filterBy == "Book")
+        this.recommendTasksResultFiltered = this.recommendTasksResult.filter(result => result.ISBN.toString() == this.filterByTerm);
+    }else{
+      this.recommendTasksResultFiltered = this.recommendTasksResult;
+    }
   }
 
   newRecommendTask() {
