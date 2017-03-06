@@ -1,8 +1,9 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
 
-from RecommendApi.models import RecommendTask
-from RecommendApi.serializers import UserSerializer, GroupSerializer, RecommendTaskSerializer
+from RecommendApi.models import RecommendTask, BookUser, Book, BookRaiting
+from RecommendApi.serializers import UserSerializer, GroupSerializer, RecommendTaskSerializer, BookUserSerializer, \
+    BookSerializer, BookRaitingSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -24,3 +25,18 @@ class GroupViewSet(viewsets.ModelViewSet):
 class RecommendTaskViewSet(viewsets.ModelViewSet):
     queryset = RecommendTask.objects.all()
     serializer_class = RecommendTaskSerializer
+
+
+class BookUserViewSet(viewsets.ModelViewSet):
+    queryset = BookUser.objects.all()
+    serializer_class = BookUserSerializer
+
+
+class BookViewSet(viewsets.ModelViewSet):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+
+
+class BookRaitingViewSet(viewsets.ModelViewSet):
+    queryset = BookRaiting.objects.all()
+    serializer_class = BookRaitingSerializer
