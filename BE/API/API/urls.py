@@ -20,12 +20,13 @@ from RecommendApi import views
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
 router.register(r'groups', views.GroupViewSet)
-router.register(r'tasks', views.RecommendTaskViewSet)
-router.register(r'books', views.BookViewSet)
-router.register(r'bookusers', views.BookUserViewSet)
-router.register(r'bookraitings', views.BookRaitingViewSet)
 
 urlpatterns = [
     url(r'^', include(router.urls)),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'bookusers/', views.book_user_list),
+    url(r'books/', views.book_list),
+    url(r'bookraitings/', views.book_raiting_list),
+    url(r'tasks/', views.recommend_task_list),
+    url(r'tasks/(?P<pk>[0-9]+)$', views.recommend_task_list_detail),
 ]

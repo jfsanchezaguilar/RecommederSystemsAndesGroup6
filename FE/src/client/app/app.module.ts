@@ -8,7 +8,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AboutModule } from './about/about.module';
 import { HomeModule } from './home/home.module';
 import { SharedModule } from './shared/shared.module';
-import { RecommendTaskService } from "./services/recommendtasks.service";
 
 @NgModule({
   imports: [BrowserModule, HttpModule, AppRoutingModule, AboutModule, HomeModule, SharedModule.forRoot()],
@@ -16,7 +15,7 @@ import { RecommendTaskService } from "./services/recommendtasks.service";
   providers: [{
     provide: APP_BASE_HREF,
     useValue: '<%= APP_BASE %>'
-  }, RecommendTaskService],
+  }],
   bootstrap: [AppComponent]
 
 })

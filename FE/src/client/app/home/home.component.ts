@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { RecommendTask, TaskStatus } from "../models/RecommendTask";
 import { RecommendTaskService } from "../services/recommendtasks.service";
 import * as moment from 'moment';
+import { BookUser, Book, BookRaiting } from "../models/Book";
+import { BookService } from "../services/book.service";
+import { BookUserService } from "../services/bookusers.service";
+import { BookRaitingService } from "../services/bookraitings.service";
 /**
  * This class represents the lazy loaded HomeComponent.
  */
@@ -20,6 +24,9 @@ export class HomeComponent implements OnInit {
   public saveSuccess: boolean = false;
   public recommendTasks: RecommendTask[] = [];
   public recommendTaskSelected: RecommendTask = new RecommendTask();
+  public newUserObj: BookUser = new BookUser();
+  public newBookObj: Book = new Book();
+  public newBookRaitingObj: BookRaiting = new BookRaiting();
 
   ngOnInit(): void {
     this.recommendTaskService.getAll().subscribe(response => this.recommendTasks = response.results);
@@ -27,7 +34,7 @@ export class HomeComponent implements OnInit {
       this.recommendTaskSelected = this.recommendTasks[0];
   }
 
-  constructor(private recommendTaskService: RecommendTaskService) {
+  constructor(private recommendTaskService: RecommendTaskService, private bookService: BookService, private bookUserService: BookUserService, private bookRaitingService: BookRaitingService) {
 
   }
 
@@ -43,7 +50,7 @@ export class HomeComponent implements OnInit {
     this.trainingSelected = value;
   }
 
-  onRecommendTaskSelected(value: RecommendTask){
+  onRecommendTaskSelected(value: RecommendTask) {
     this.recommendTaskSelected = value;
   }
 
@@ -61,7 +68,37 @@ export class HomeComponent implements OnInit {
       }, 2000);
     });
   }
-  
+
+  newBook() {
+    this.bookService.save(this.newBookObj).subscribe(() => {
+      this.saveSuccess = true;
+      this.newBookObj = new Book();
+      setTimeout(() => {
+        this.saveSuccess = false;
+      }, 2000);
+    });
+  }
+
+  newUser() {
+    this.bookUserService.save(this.newUserObj).subscribe(() => {
+      this.saveSuccess = true;
+      this.newUserObj = new BookUser();
+      setTimeout(() => {
+        this.saveSuccess = false;
+      }, 2000);
+    });
+  }
+
+  newBookRaiting() {
+    this.bookRaitingService.save(this.newBookRaitingObj).subscribe(() => {
+      this.saveSuccess = true;
+      this.newBookRaitingObj = new BookRaiting();
+      setTimeout(() => {
+        this.saveSuccess = false;
+      }, 2000);
+    });
+  }
+
   private getTraining(trainingSelected: string): number {
     let training: number = 80;
     switch (trainingSelected) {
