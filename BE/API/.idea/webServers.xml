@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="22373d87-539b-4867-9e03-6d624f234308" name="Test" url="http://localhost">
+        <fileTransfer port="0" mountedRoot="C:\dev\recommend\BE\Deploy" accessType="MOUNT" />
+      </webServer>
+      <webServer id="7d78e41e-f2df-4c9b-85ef-68d487d5c0f7" name="DeployLinux" url="http://localhost">
+        <fileTransfer port="0" accessType="LOCAL" />
+      </webServer>
+    </option>
+  </component>
+</project>
