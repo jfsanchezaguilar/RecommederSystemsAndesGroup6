@@ -3,10 +3,11 @@ import { RouterModule } from '@angular/router';
 import { rootRouterConfig } from './app.routes';
 import { AppComponent } from './app.component';
 import { GithubService } from './github/shared/github.service';
+import { RecommendTaskService } from "./services/recommendtasks.service";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
-import { DropdownModule } from 'ng2-bootstrap';
+import { DropdownModule, TabsModule } from 'ng2-bootstrap';
 
 import { AboutComponent } from './about/about.component';
 import { HomeComponent } from './home/home.component';
@@ -32,10 +33,11 @@ import { ContactComponent } from './contact/contact.component';
     ReactiveFormsModule,
     HttpModule,
     DropdownModule.forRoot(),
+    TabsModule.forRoot(),
     RouterModule.forRoot(rootRouterConfig, { useHash: true })
   ],
   providers: [
-    GithubService
+    GithubService, RecommendTaskService
   ],
   bootstrap: [ AppComponent ]
 })
