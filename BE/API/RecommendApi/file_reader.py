@@ -1,34 +1,25 @@
 import os
 
 
-def read_file(algorithm, similarity, training):
+def read_file(algorithm, similarity, training, user_id, book_id, is_book):
     if algorithm == "Jaccard" and similarity == "Item":
         path = os.path.join(os.path.expanduser('~'), 'ItemBased', "rj" + str(training) + ".json")
-        print(path)
-        with open(path, 'r') as content_file:
-            content = content_file.read()
-        return content
     elif algorithm == "Cosine" and similarity == "Item":
         path = os.path.join(os.path.expanduser('~'), 'ItemBased', "rc" + str(training) + ".json")
-        print(path)
-        with open(path, 'r') as content_file:
-            content = content_file.read()
-        return content
     elif algorithm == "Pearson" and similarity == "Item":
         path = os.path.join(os.path.expanduser('~'), 'ItemBased', "rp" + str(training) + ".json")
-        print(path)
-        with open(path, 'r') as content_file:
-            content = content_file.read()
-        return content
     if algorithm == "Jaccard" and similarity == "User":
-        with open("/home/ubuntu/UserBased/rj" + str(training) + ".json", 'r') as content_file:
-            content = content_file.read()
-        return content
+        path = os.path.join(os.path.expanduser('~'), 'UserBased', "rj50.json")
     elif algorithm == "Cosine" and similarity == "User":
-        with open("/home/ubuntu/UserBased/rc" + str(training) + ".json", 'r') as content_file:
-            content = content_file.read()
-        return content
+        path = os.path.join(os.path.expanduser('~'), 'UserBased', "rj50.json")
     elif algorithm == "Pearson" and similarity == "User":
-        with open("/home/ubuntu/UserBased/rp" + str(training) + ".json", 'r') as content_file:
-            content = content_file.read()
-        return content
+        path = os.path.join(os.path.expanduser('~'), 'UserBased', "rj50.json")
+    print(path)
+    if is_book:
+        lines = [line for line in open(path) if book_id in line]
+    else:
+        lines = [line for line in open(path) if user_id in line]
+    lines = [line[1:].rstrip('\n') for line in lines]
+    lines = ",".join(lines)
+    lines = "["+lines+"]"
+    return lines

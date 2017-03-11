@@ -1,3 +1,5 @@
+import random
+
 from rest_framework import generics
 from rest_framework import status
 from rest_framework import viewsets
@@ -29,8 +31,10 @@ class GroupViewSet(viewsets.ModelViewSet):
 
 class RecommendTaskDetails(generics.ListAPIView):
     def get(self, request, uid):
+        book_id = self.request.query_params.get('book_id', None)
+        user_id = self.request.query_params.get('user_id', None)
         task = RecommendTask.objects.get(id=uid)
-        json = read_file(task.algorithm, task.similarity, task.training)
+        json = read_file(task.algorithm, task.similarity, task.training, user_id, book_id, book_id is not None)
         return Response(json)
 
 

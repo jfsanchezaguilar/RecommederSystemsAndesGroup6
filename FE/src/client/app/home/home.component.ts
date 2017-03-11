@@ -54,7 +54,33 @@ export class HomeComponent implements OnInit {
 
   private updateRecommendTaskResult() {
     this.isResultNotAvailabel = false;
-    this.recommendTaskService.get(this.recommendTaskSelected.id).subscribe((response) => {
+    // this.recommendTaskService.get(this.recommendTaskSelected.id).subscribe((response) => {
+    //   this.recommendTasksResult = JSON.parse(response);
+    //   this.recommendTasksResultFiltered = this.recommendTasksResult;
+    //   if (response == "") {
+    //     this.isResultNotAvailabel = true;
+    //   }
+    // }, (error: any) => {
+    //   this.isResultNotAvailabel = true;
+    // });
+  }
+
+  private updateRecommendTaskResulByUsert(userId:any) {
+    this.isResultNotAvailabel = false;
+    this.recommendTaskService.getByUser(this.recommendTaskSelected.id, userId).subscribe((response) => {
+      this.recommendTasksResult = JSON.parse(response);
+      this.recommendTasksResultFiltered = this.recommendTasksResult;
+      if (response == "") {
+        this.isResultNotAvailabel = true;
+      }
+    }, (error: any) => {
+      this.isResultNotAvailabel = true;
+    });
+  }
+
+  private updateRecommendTaskResulByBook(bookId:any) {
+    this.isResultNotAvailabel = false;
+    this.recommendTaskService.getByBook(this.recommendTaskSelected.id, bookId).subscribe((response) => {
       this.recommendTasksResult = JSON.parse(response);
       this.recommendTasksResultFiltered = this.recommendTasksResult;
       if (response == "") {
@@ -89,9 +115,9 @@ export class HomeComponent implements OnInit {
   filterItems() {
     if (this.filterByTerm != "") {
       if (this.filterBy == "User")
-        this.recommendTasksResultFiltered = this.recommendTasksResult.filter(result => result.UserID.toString() == this.filterByTerm);
+        this.updateRecommendTaskResulByUsert(this.filterByTerm);
       else if (this.filterBy == "Book")
-        this.recommendTasksResultFiltered = this.recommendTasksResult.filter(result => result.ISBN.toString() == this.filterByTerm);
+        this.updateRecommendTaskResulByBook(this.filterByTerm);
     }else{
       this.recommendTasksResultFiltered = this.recommendTasksResult;
     }

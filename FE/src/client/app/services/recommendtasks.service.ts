@@ -29,8 +29,12 @@ export class RecommendTaskService {
         return this.http.get(this.url, { headers: this.headers }).map(this.extractData);
     }
 
-    get(id: number) {
-        return this.http.get(this.urldetails + id, { headers: this.headers }).map(this.extractData);
+    getByUser(id: number, userId: any) {
+        return this.http.get(this.urldetails + id + "?user_id=" + userId, { headers: this.headers }).map(this.extractData);
+    }
+
+    getByBook(id: number, bookId: any) {
+        return this.http.get(this.urldetails + id + "?book_id=" + bookId, { headers: this.headers }).map(this.extractData);
     }
 
     private handleError(error: any) {
